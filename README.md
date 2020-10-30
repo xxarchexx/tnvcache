@@ -15,10 +15,10 @@
         //initialize internal stuff
         api.Init()
        
-        //set mongo connection
+        //create new  mongo connection
         api.ConnectRepository.NewConnection(dbanme, table, connectionString)
         
-        //also could SetConnection
+        //also could SetConnection (exists)
         //api.ConnectRepository.SetConnection(dbanme, table, mogno.Client)
         
         //usage
