@@ -1,29 +1,17 @@
-    import "github.com/xxarchexx/tnvcache"
+package main
 
-   
+import (
+	"github.com/xxarchexx/tnvcache"
+)
 
-    //set con string
+var connectionString = "mongodb://root:example@127.0.0.1:28019"
 
-    var connectionString = "mongodb://root:example@127.0.0.1:28019"
+type tt struct {
+}
 
-
-    func main() {
-        
-        //declare API
-        api := tnvcache.API{}
-        
-        //initialize internal stuff
-        api.Init()
-       
-        //create new  mongo connection
-        api.ConnectRepository.NewConnection(dbanme, table, connectionString)
-        
-        //also could SetConnection (exists)
-        //api.ConnectRepository.SetConnection(dbanme, table, mogno.Client)
-        
-        //usage
-        var result = api.Request("яблоко")
-        
-        //close connection
-        defer api.ConnectRepository.CloseConnection()
-    }
+func main() {
+		api := tnvcache.API{}
+		api.WithMongo("tnved", "cache", connectionString)
+		api.Request("яблоко")
+		defer api.Close()
+}

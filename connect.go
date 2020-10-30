@@ -11,7 +11,7 @@ type API struct {
 }
 
 func (api *API) WithMongo(dbname, tablename, connectionstring string) {
-	api.cache, api.Close = mongo.Init(dbname, tablename, connectionstring)
+	api.cache, api.iclose = mongo.Init(dbname, tablename, connectionstring)
 }
 
 func (api *API) Close() {
