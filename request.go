@@ -6,16 +6,13 @@ import (
 	"log"
 	"net/http"
 	"net/url"
-
-	"github.com/xxarchexx/tnvcache/internal"
 )
 
-type api struct {
-	cache internal.CacheRepository
-}
-
 //Request or get from mysql
-func (api *api) Request(key string) (string, error) {
+func (api *API) Request(key string) (string, error) {
+	c := api.cache
+	fmt.Printf("%v", c)
+
 	result, err := api.cache.Get(key)
 
 	if err != nil {
@@ -43,6 +40,7 @@ func (api *api) Request(key string) (string, error) {
 		}
 
 		strData = string(responseData)
+		api.cache.Set(key, strData)
 
 	} else {
 		strData = result

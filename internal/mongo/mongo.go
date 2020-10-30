@@ -3,40 +3,43 @@ package mongo
 
 import (
 	"context"
+	"fmt"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-// var
-
-// type Client struct {
-
-// }
 const keyFieldName string = "key"
 const valueParam string = "value"
 
-type MongoStore struct {
-	Client *mongo.Client
-}
-
 var collection *mongo.Collection
 
+type Store struct {
+	client *mongo.Client
+}
+
+//Store new Store
+func Init() *Store {
+	return &Store{}
+}
+
 //Get data from mongo
-func (store *MongoStore) Get(key string) (string, error) {
+func (store *Store) Get(key string) (string, error) {
 	filter := bson.M{"key": key}
 
-	var resultString struct {
-		result string
+	type Result struct {
+		Value string `bson:"value"`
 	}
 
-	collection.FindOne(context.Background(), filter).Decode(&resultString)
-	return resultString.result, nil
+	var result Result
+	collection.FindOne(context.Background(), filter).Decode(&result)
+	fmt.Println(result.Value)
+	return result.Value, nil
 
 }
 
 //Set data to mongo
-func (store *MongoStore) Set(key, value string) error {
+func (store *Store) Set(key, value string) error {
 	type saveStruct struct {
 		Key   string
 		Value string

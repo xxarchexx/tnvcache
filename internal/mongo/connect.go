@@ -10,10 +10,10 @@ import (
 )
 
 //ConnectionRepositry
-type ConnectionRepositry MongoStore
+type ConnectionRepositry Store
 
 //GetConnectionRepository  for db
-func (store *ConnectionRepositry) GetConnectionRepository() internal.ConnectionRepository {
+func (store *Store) GetConnectionRepository() internal.ConnectionRepository {
 	return (*ConnectionRepositry)(store)
 }
 
@@ -27,21 +27,21 @@ func (store *ConnectionRepositry) NewConnection(dbname, tableName, uri string) e
 		return err
 	}
 
-	store.Client = client
+	store.client = client
 	collection = client.Database(dbname).Collection(tableName)
 	return nil
 }
 
 //SetConnection set exists connection
 func (store *ConnectionRepositry) SetConnection(dbname, tableName string, client interface{}) {
-	store.Client = client.(*mongo.Client)
-	collection = store.Client.Database(dbname).Collection(tableName)
+	store.client = client.(*mongo.Client)
+	collection = store.client.Database(dbname).Collection(tableName)
 }
 
 //CloseConnection close connection
 func (store *ConnectionRepositry) CloseConnection() error {
 	ctx := context.Background()
-	err := store.Client.Disconnect(ctx)
+	err := store.client.Disconnect(ctx)
 
 	if err != nil {
 		log.Fatal(err)
