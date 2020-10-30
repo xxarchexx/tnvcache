@@ -12,7 +12,7 @@
         //declare API
         api := tnvcache.API{}
         
-        //initaialize internal stuff
+        //initialize internal stuff
         api.Init()
        
         //set mongo connection
