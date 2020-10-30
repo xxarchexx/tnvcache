@@ -8,8 +8,6 @@ import (
 
 var connectionString = "mongodb://root:example@127.0.0.1:28019"
 
-type tt struct {
-}
 
 func main() {
 	api := tnvcache.API{}
