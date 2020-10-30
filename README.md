@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/xxarchexx/tnvcache"
 )
 
@@ -10,8 +12,14 @@ type tt struct {
 }
 
 func main() {
-		api := tnvcache.API{}
-		api.WithMongo("tnved", "cache", connectionString)
-		api.Request("яблоко")
-		defer api.Close()
+	api := tnvcache.API{}
+	api.WithMongo("tnved", "cache", connectionString)
+	result, err := api.Request("яблоко")
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println(result)
+	}
+
+	defer api.Close()
 }
