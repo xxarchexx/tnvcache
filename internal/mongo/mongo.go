@@ -22,23 +22,34 @@ type Store struct {
 	client *mongo.Client
 }
 
+var store Store
+
 //Store new Store
-func (store *Store) Init(dbname, tableName, connectionstring string) internal.CacheRepository {
+func Init(dbname, tableName, connectionstring string) (internal.CacheRepository, internal.IClose) {
+	store = Store{}
 	ctx := context.Background()
 	options := options.Client().ApplyURI(connectionstring)
 	client, err := mongo.Connect(ctx, options)
+
 	if err != nil {
 		log.Fatal(err)
-
 	}
-
 	store.client = client
+	collection = store.client.Database(dbname).Collection(tableName)
 
 	var cacheRepo internal.CacheRepository
-	cacheRepo = internal.CacheRepository(store)
-	collection = store.client.Database(dbname).Collection(tableName)
-	return cacheRepo
+	cacheRepo = internal.CacheRepository(&store)
 
+	var close internal.IClose
+	close = internal.IClose(&store)
+
+	return cacheRepo, close
+
+}
+
+//Close connection
+func (store *Store) Close() {
+	store.client.Disconnect(context.Background())
 }
 
 //Get data from mongo

@@ -6,10 +6,14 @@ import (
 )
 
 type API struct {
-	cache internal.CacheRepository
+	cache  internal.CacheRepository
+	iclose internal.IClose
 }
 
 func (api *API) WithMongo(dbname, tablename, connectionstring string) {
-	store := mongo.Store{}
-	api.cache = store.Init(dbname, tablename, connectionstring)
+	api.cache, api.Close = mongo.Init(dbname, tablename, connectionstring)
+}
+
+func (api *API) Close() {
+	api.iclose.Close()
 }
