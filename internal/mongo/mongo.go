@@ -4,9 +4,13 @@ package mongo
 import (
 	"context"
 	"fmt"
+	"log"
+
+	"github.com/xxarchexx/tnvcache/internal"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 const keyFieldName string = "key"
@@ -19,8 +23,22 @@ type Store struct {
 }
 
 //Store new Store
-func Init() *Store {
-	return &Store{}
+func (store *Store) Init(dbname, tableName, connectionstring string) internal.CacheRepository {
+	ctx := context.Background()
+	options := options.Client().ApplyURI(connectionstring)
+	client, err := mongo.Connect(ctx, options)
+	if err != nil {
+		log.Fatal(err)
+
+	}
+
+	store.client = client
+
+	var cacheRepo internal.CacheRepository
+	cacheRepo = internal.CacheRepository(store)
+	collection = store.client.Database(dbname).Collection(tableName)
+	return cacheRepo
+
 }
 
 //Get data from mongo

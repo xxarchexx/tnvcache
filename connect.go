@@ -6,15 +6,10 @@ import (
 )
 
 type API struct {
-	ConnectRepository internal.ConnectionRepository
-	storeRepository   *mongo.Store
-	cache             internal.CacheRepository
+	cache internal.CacheRepository
 }
 
-func (apiStore *API) Init() {
-	apiStore.storeRepository = mongo.Init()
-	apiStore.ConnectRepository = apiStore.storeRepository.GetConnectionRepository()
-	var setInterface internal.CacheRepository
-	setInterface = internal.CacheRepository(apiStore.storeRepository)
-	apiStore.cache = setInterface
+func (api *API) WithMongo(dbname, tablename, connectionstring string) {
+	store := mongo.Store{}
+	api.cache = store.Init(dbname, tablename, connectionstring)
 }

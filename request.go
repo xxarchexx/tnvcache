@@ -8,6 +8,8 @@ import (
 	"net/url"
 )
 
+
+
 //Request or get from mysql
 func (api *API) Request(key string) (string, error) {
 	c := api.cache
