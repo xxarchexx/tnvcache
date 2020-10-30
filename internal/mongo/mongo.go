@@ -13,13 +13,9 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-const keyFieldName string = "key"
-const valueParam string = "value"
-
-var collection *mongo.Collection
-
 type Store struct {
-	client *mongo.Client
+	client     *mongo.Client
+	collection *mongo.Collection
 }
 
 var store Store
@@ -35,7 +31,7 @@ func Init(dbname, tableName, connectionstring string) (internal.CacheRepository,
 		log.Fatal(err)
 	}
 	store.client = client
-	collection = store.client.Database(dbname).Collection(tableName)
+	store.collection = store.client.Database(dbname).Collection(tableName)
 
 	var cacheRepo internal.CacheRepository
 	cacheRepo = internal.CacheRepository(&store)
@@ -61,7 +57,7 @@ func (store *Store) Get(key string) (string, error) {
 	}
 
 	var result Result
-	collection.FindOne(context.Background(), filter).Decode(&result)
+	store.collection.FindOne(context.Background(), filter).Decode(&result)
 	fmt.Println(result.Value)
 	return result.Value, nil
 
@@ -75,7 +71,7 @@ func (store *Store) Set(key, value string) error {
 	}
 	newSaveStruct := saveStruct{Key: key, Value: value}
 
-	_, err := collection.InsertOne(context.Background(), newSaveStruct)
+	_, err := store.collection.InsertOne(context.Background(), newSaveStruct)
 	if err != nil {
 		return err
 	}
