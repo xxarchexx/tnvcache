@@ -8,13 +8,8 @@ import (
 	"net/url"
 )
 
-
-
 //Request or get from mysql
 func (api *API) Request(key string) (string, error) {
-	c := api.cache
-	fmt.Printf("%v", c)
-
 	result, err := api.cache.Get(key)
 
 	if err != nil {
@@ -32,7 +27,6 @@ func (api *API) Request(key string) (string, error) {
 		resp, err := http.Get(fmt.Sprintf("https://api.tnved.s-3.dev/api/Search/Search?%v", v.Encode()))
 
 		if err != nil {
-			log.Fatal(err)
 			return "", err
 		}
 

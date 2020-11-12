@@ -3,7 +3,6 @@ package mongo
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"github.com/xxarchexx/tnvcache/internal"
@@ -58,7 +57,6 @@ func (store *Store) Get(key string) (string, error) {
 
 	var result Result
 	store.collection.FindOne(context.Background(), filter).Decode(&result)
-	fmt.Println(result.Value)
 	return result.Value, nil
 
 }
